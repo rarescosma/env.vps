@@ -15,10 +15,10 @@ rarescosma-com:
     - file_mode: 664
     - user: karelian
     - group: www-data
-    - recurse:
-      - user
-      - group
-      - mode
+#    - recurse:
+#      - user
+#      - group
+#      - mode
 
 rarescosma-com-config:
   file.managed:
