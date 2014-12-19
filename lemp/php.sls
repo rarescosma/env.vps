@@ -28,6 +28,7 @@ php5-config:
     - source: salt://_config/php
     - dir_mode: 755
     - file_mode: 644
+    - template: jinja
 
 {% if not salt['cmd.has_exec']('wp') %}
 get-composer:
