@@ -21,7 +21,6 @@ php5-deps:
       - php5-cli
       - php5-xdebug
 
-# Configuration files for php5-fpm
 php5-config:
   file.recurse:
     - name: /etc/php5
@@ -29,6 +28,12 @@ php5-config:
     - dir_mode: 755
     - file_mode: 644
     - template: jinja
+
+php5-umask:
+  file.append:
+    - name: /etc/init/php-fpm.conf
+    - text:
+      - "umask 0002"
 
 {% if not salt['cmd.has_exec']('wp') %}
 get-composer:

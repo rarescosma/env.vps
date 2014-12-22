@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang='en' dir='ltr'>
+<head>
+<meta charset='UTF-8' />
+<style>
+<!--
+body {
+        background-color: rgb(20,20,20);
+        text-align: center;
+        font-family: Georgia;
+        font-weight: normal;
+}
+
+h2 {
+        color: rgb(243,180,17);
+        font-size: 42px;
+        text-shadow: 0 0 5px rgb(243,180,17);
+}
+
+h1 {
+        color: rgb(228,229,234);
+        font-size: 63px;
+        font-style: italic;
+        text-shadow: 0 0 7px rgb(200,201,217);
+        display: none;
+}
+-->
+</style>
+</head>
+<body>
+
+<h2>Silence is golden.</h2>
+<h1>Duct tape is silver.</h1>
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js'></script>
+<script>
+jQuery(document).ready(function(){
+        setTimeout(function(){
+                $('h1').fadeIn('slow');
+        }, 1400);
+});
+</script>
+</body>
+</html>

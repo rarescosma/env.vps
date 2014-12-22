@@ -4,41 +4,78 @@ include:
 sites-dir:
   file.directory:
     - name: /srv/sites
-    - dir_mode: 775
-    - user: karelian
-    - group: www-data
-
-rarescosma-com:
-  file.directory:
-    - name: /srv/sites/rarescosma.com
-    - dir_mode: 775
+    - dir_mode: '2775'
     - file_mode: 664
-    - user: karelian
-    - group: www-data
-#    - recurse:
-#      - user
-#      - group
-#      - mode
+    - user: {{ pillar.get('unix.user') }}
+    - group: www-pub
+    - recurse:
+      - user
+      - group
+      - mode
 
-rarescosma-com-config:
+{% for domain, props in pillar.get('sites', {}).items() %}
+sites-{{domain}}-root:
+  file.directory:
+    - name: /srv/sites/{{domain}}
+
+sites-{{domain}}-htdocs:
+  file.directory:
+    - name: /srv/sites/{{domain}}/htdocs
+
+sites-{{domain}}-error-page:
+  file.symlink:
+    - name: /srv/sites/{{domain}}/htdocs/golden.html
+    - target: /etc/nginx/golden.html
+
+sites-{{domain}}-config:
   file.managed:
-    - name: /etc/nginx/sites/rarescosma.com.conf
-    - source: salt://_config/sites/rarescosma.com/nginx.conf
+    - name: /etc/nginx/sites/{{domain}}.conf
+    - source: salt://_config/sites/nginx.conf.jj
+    - template: jinja
+    - watch_in:
+      - service: nginx
+    - defaults:
+      domain: {{domain}}
+      use_www: {{ props.get('use_www', False) }}
+      wp: {{ props.get('wp', False) }}
+      ssl: {{ props.get('ssl', False) }}
+{% if props.get('extra', False) %}
+      extra: /etc/nginx/sites/{{domain}}/extra.conf
 
-rarescosma-com-sql-user:
+sites-{{domain}}-extra-config:
+  file.managed:
+    - name: /etc/nginx/sites/{{domain}}/extra.conf
+    - source: salt://_config/sites/{{domain}}.conf
+    - makedirs: True
+    - watch_in:
+      - service: nginx
+{% endif %}
+
+{% if props.get('ssl', False) %}
+sites-{{domain}}-cert:
+  file.managed:
+    - name: /etc/nginx/ssl/{{domain}}/combined.pem
+    - source: salt://_config/sites/{{domain}}.pem
+    - makedirs: True
+
+sites-{{domain}}-key:
+  file.managed:
+    - name: /etc/nginx/ssl/{{domain}}/combined.key
+    - source: salt://_config/sites/{{domain}}.key
+    - makedirs: True
+{% endif %}
+
+{% if props.get('mysql_user', False) %}
+sites-{{domain}}-sql-user:
   mysql_user.present:
-    - name: rares
-    - password_hash: '{{ pillar['mysql.rares.pass'] }}'
+    - name: {{ props['mysql_user'] }}
+    - password_hash: "{{ props['mysql_pass'] }}"
     - host: localhost
   mysql_grants.present:
     - revoke_first: True
     - grant: select
-    - database: rares.*
-    - user: rares
+    - database: {{ props['mysql_user'] }}.*
+    - user: {{ props['mysql_user'] }}
     - host: localhost
-
-extend:
-  nginx:
-    service:
-      - watch:
-          - file: rarescosma-com-config
+{% endif %}
+{% endfor %}

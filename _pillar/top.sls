@@ -1,3 +1,4 @@
 base:
   'vps':
     - vps
+    - sites
