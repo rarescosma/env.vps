@@ -3,7 +3,6 @@ ag-build:
   cmd.run:
     - cwd: /tmp/ag
     - name: ./build.sh && make install
-    - unless: which ag
 
 ag-build-deps:
   pkg.installed:
@@ -14,7 +13,6 @@ ag-build-deps:
       - zlib1g-dev
       - liblzma-dev
     - require_in: ag-build
-    - unless: which ag
 
 ag-clone-and-build:
   git.latest:
@@ -22,5 +20,4 @@ ag-clone-and-build:
     - rev: master
     - target: /tmp/ag
     - require_in: ag-build
-    - unless: which ag
 {% endif %}

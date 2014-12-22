@@ -26,6 +26,8 @@ sites-{{domain}}-error-page:
   file.symlink:
     - name: /srv/sites/{{domain}}/htdocs/golden.html
     - target: /etc/nginx/golden.html
+    - user: {{ pillar.get('unix.user') }}
+    - group: www-pub
 
 sites-{{domain}}-config:
   file.managed:

@@ -6,11 +6,11 @@ php-stack:
     - name: php5-fpm
     - require:
       - pkg: php5-fpm
-      - pkg: php5-deps
+      - pkg: php-deps
     - watch:
       - file: /etc/php5
 
-php5-deps:
+php-deps:
   pkg.installed:
     - pkgs:
       - php5-apcu
@@ -21,7 +21,7 @@ php5-deps:
       - php5-cli
       - php5-xdebug
 
-php5-config:
+php-config:
   file.recurse:
     - name: /etc/php5
     - source: salt://_config/php
@@ -29,28 +29,27 @@ php5-config:
     - file_mode: 644
     - template: jinja
 
-php5-umask:
+php-umask:
   file.append:
     - name: /etc/init/php-fpm.conf
     - text:
       - "umask 0002"
 
 {% if not salt['cmd.has_exec']('wp') %}
-get-composer:
-  cmd:
-    - run
+php-download-composer:
+  cmd.run:
     - user: root
     - name: 'CURL=`which curl`; $CURL -sS https://getcomposer.org/installer | php'
     - unless: test -f /usr/bin/composer
 
-install-composer:
+php-install-composer:
   cmd.wait:
     - name: mv /root/composer.phar /usr/bin/composer
     - user: root
     - watch:
       - cmd: get-composer
 
-wp_cli:
+php-wp-cli:
   git.latest:
     - name: git://github.com/wp-cli/wp-cli.git
     - rev: master
@@ -60,13 +59,13 @@ wp_cli:
     - force: False
     - require:
       - pkg: php-stack
-      - cmd: install-composer
+      - cmd: php-install-composer
 
-/usr/lib/wp-cli:
+php-wp-cli-composer-deps:
   composer.installed:
     - no_dev: true
 
-/usr/bin/wp:
+php-wp-cli-symlink:
   file.symlink:
     - target: /usr/lib/wp-cli/bin/wp
 {% endif %}

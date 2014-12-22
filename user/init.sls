@@ -45,7 +45,7 @@ user-{{ user }}:
       - group: {{ user }}
       - group: user-www-group
 
-{% if pillar.get('unix.user.shell', '/bin/bash') == '/bin/bash' %}
+{% if '/bin/bash' == shell %}
 user-enhance-bash-profile:
   file.append:
     - name: /home/{{ user }}/.bashrc
