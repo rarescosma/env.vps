@@ -1,2 +1,5 @@
 /high.sh
 /_pillar/vps.sls
+*.key
+*.pem
+authorized_keys
