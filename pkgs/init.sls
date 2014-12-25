@@ -9,3 +9,4 @@ pkgs-essential:
 
 include:
   - pkgs.ag
+  - pkgs.tx
