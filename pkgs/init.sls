@@ -9,4 +9,5 @@ pkgs-essential:
 
 include:
   - pkgs.ag
+  - pkgs.openvpn
   - pkgs.tx
