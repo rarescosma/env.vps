@@ -35,7 +35,7 @@ php-umask:
     - text:
       - "umask 0002"
 
-{% if not salt['cmd.has_exec']('wp') %}
+{% if pillar['php.install.wp'] and not salt['cmd.has_exec']('wp') %}
 php-download-composer:
   cmd.run:
     - user: root
