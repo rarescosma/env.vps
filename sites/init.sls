@@ -41,6 +41,7 @@ sites-{{domain}}-config:
       use_www: {{ props.get('use_www', False) }}
       wp: {{ props.get('wp', False) }}
       ssl: {{ props.get('ssl', False) }}
+      new_relic: {{ props.get('new_relic', False) }}
 {% if props.get('extra', False) %}
       extra: /etc/nginx/sites/{{domain}}/extra.conf
 

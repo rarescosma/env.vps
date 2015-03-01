@@ -15,3 +15,4 @@ sites:
     mysql_pass: '*BABAFACECACA'
     use_www: True
     wp: True
+    new_relic: True

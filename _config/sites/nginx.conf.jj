@@ -34,7 +34,20 @@ server {
   access_log /var/log/nginx/{{domain}}.out.log;
   error_log /var/log/nginx/{{domain}}.err.log;
 
-  {% if wp %}include /etc/nginx/wp-common.conf;{% endif %}
+
+  {% if wp %}
+  include /etc/nginx/wp-common.conf;
+
+  # Handle PHP
+  location ~ \.php$ {
+    fastcgi_param PHP_VALUE "newrelic.enabled={% if new_relic %}true{% else %}false{% endif %}";
+    include /etc/nginx/php-handler.conf;
+  }
+  {% endif %}
+
+  # Cache assets
+  include /etc/nginx/cache-common.conf;
+
   {% if extra is defined %}include {{extra}};{% endif %}
   include /etc/nginx/error-handler.conf;
 }
