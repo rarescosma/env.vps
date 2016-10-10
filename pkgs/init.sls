@@ -6,8 +6,8 @@ pkgs-essential:
       - git-core
       - mosh
       - mc
+      - silversearcher-ag
 
 include:
-  - pkgs.ag
   - pkgs.openvpn
   - pkgs.tx
