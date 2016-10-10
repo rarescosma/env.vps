@@ -23,8 +23,8 @@ mysql-config:
 mysqld:
   pkg.installed:
     - pkgs:
-      - mysql-server
-      - mysql-client
+      - mysql-server-5.6
+      - mysql-client-5.6
       - python-mysqldb
     - require:
       - debconf: mysql-debconf

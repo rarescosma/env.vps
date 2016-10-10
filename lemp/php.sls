@@ -47,14 +47,13 @@ php-install-composer:
     - name: mv /root/composer.phar /usr/bin/composer
     - user: root
     - watch:
-      - cmd: get-composer
+      - cmd: php-download-composer
 
 php-wp-cli:
   git.latest:
     - name: git://github.com/wp-cli/wp-cli.git
     - rev: master
     - target: /usr/lib/wp-cli
-    - runas: root
     - submodules: True
     - force: False
     - require:
@@ -63,9 +62,11 @@ php-wp-cli:
 
 php-wp-cli-composer-deps:
   composer.installed:
+    - name: /usr/lib/wp-cli
     - no_dev: true
 
 php-wp-cli-symlink:
   file.symlink:
+    - name: /usr/local/bin/wp
     - target: /usr/lib/wp-cli/bin/wp
 {% endif %}
