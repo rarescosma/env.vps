@@ -40,7 +40,6 @@ server {
 
   # Handle PHP
   location ~ \.php$ {
-    fastcgi_param PHP_VALUE "newrelic.enabled={% if new_relic %}true{% else %}false{% endif %}";
     include /etc/nginx/php-handler.conf;
   }
   {% endif %}

@@ -1,3 +1,4 @@
+{% if not salt['cmd.has_exec']('mysql') %}
 mysql-debconf:
   debconf.set:
     - name: mysql-server
@@ -5,7 +6,18 @@ mysql-debconf:
         'mysql-server/root_password': {'type': 'password', 'value': '{{ pillar['mysql.root.pass'] }}'}
         'mysql-server/root_password_again': {'type': 'password', 'value': '{{ pillar['mysql.root.pass'] }}'}
         'mysql-server/start_on_boot': {'type': 'boolean', 'value': 'true'}
-    - require_in: mysqld
+    - require_in:
+      - pkg: mysqld
+
+mysql-install:
+  pkg.installed:
+    - pkgs:
+      - mysql-server
+      - mysql-client
+      - python-mysqldb
+    - watch_in:
+      - service: mysql
+{% endif %}
 
 mysql-config-dir:
   file.directory:
@@ -18,19 +30,10 @@ mysql-config:
     - name: /etc/mysql/my.cnf
     - source: salt://_config/mysql/my.cnf
     - mode: 644
-    - require_in: mysqld
+    - require_in: mysql
 
-mysqld:
-  pkg.installed:
-    - pkgs:
-      - mysql-server-5.6
-      - mysql-client-5.6
-      - python-mysqldb
-    - require:
-      - debconf: mysql-debconf
+mysql:
   service.running:
-    - name: mysql
     - enable: True
     - watch:
-      - pkg: mysqld
       - file: mysql-config

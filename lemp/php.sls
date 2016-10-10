@@ -1,29 +1,28 @@
 # PHP5 modules and configuration
 php-stack:
   pkg.installed:
-    - name: php5-fpm
+    - name: php-fpm
   service.running:
-    - name: php5-fpm
+    - name: php7.0-fpm
     - require:
-      - pkg: php5-fpm
-      - pkg: php-deps
+      - pkg: php-fpm
     - watch:
-      - file: /etc/php5
+      - file: /etc/php/7.0
 
 php-deps:
   pkg.installed:
     - pkgs:
-      - php5-apcu
-      - php5-gd
-      - php5-mysqlnd
-      - php5-mcrypt
-      - php5-curl
-      - php5-cli
-      - php5-xdebug
+      - php-mysql
+      - php-xml
+      - php-mcrypt
+      - php-curl
+      - php-cli
+    - require_in:
+      service: php-stack
 
 php-config:
   file.recurse:
-    - name: /etc/php5
+    - name: /etc/php/7.0
     - source: salt://_config/php
     - dir_mode: 755
     - file_mode: 644
@@ -31,7 +30,7 @@ php-config:
 
 php-umask:
   file.append:
-    - name: /etc/init/php-fpm.conf
+    - name: /etc/init/php7.0-fpm.conf
     - text:
       - "umask 0002"
 
@@ -57,7 +56,6 @@ php-wp-cli:
     - submodules: True
     - force: False
     - require:
-      - pkg: php-stack
       - cmd: php-install-composer
 
 php-wp-cli-composer-deps:
