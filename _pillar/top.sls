@@ -1,4 +1,4 @@
 vps:
-  'vps':
+  '*':
     - vps
     - sites
