@@ -13,8 +13,8 @@ tx-config:
   file.recurse:
     - name: /etc/transmission-daemon
     - source: salt://_config/tx
-    - file_mode: 660
+    - file_mode: 600
     - dir_mode: 775
-    - user: root
+    - user: debian-transmission
     - group: debian-transmission
     - template: jinja
