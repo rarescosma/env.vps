@@ -4,3 +4,5 @@
 *.pem
 authorized_keys
 /_config/openvpn/ipp.txt
+/_config/openvpn/*.crt
+/_config/openvpn/easy-rsa
